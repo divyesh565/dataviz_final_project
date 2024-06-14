@@ -1,0 +1,177 @@
+---
+title: "FIFA World Cup Matches Data Visualization"
+author: "Divyesh Desai - `ddesai7656@floridapoly.edu`"
+output: html_notebook
+---
+***
+
+> Importing the required library.
+
+```{r}
+
+library(dplyr)
+library(ggplot2)
+```
+
+
+> Loading the data from the URL and reading it through the imported library.
+
+```{r}
+# Load and read the Wold Cup match data
+
+url <- "https://raw.githubusercontent.com/reisanar/datasets/master/WorldCupMatches.csv"
+world_cup_data <- read.csv(url, stringsAsFactors = FALSE)
+```
+
+> Removing spaces from column names for future use.
+
+```{r}
+# Remove spaces from column names
+colnames(world_cup_data) <- gsub(" ", "", colnames(world_cup_data))
+```
+
+> Printing the structure of the data.
+
+```{r}
+# Explore the structure of the data
+
+str(world_cup_data)
+```
+
+> Printing the first few rows of the data.
+
+```{r}
+# Explore the first few rows of the data
+
+head(world_cup_data)
+```
+
+> After viewing the data, realizing datetime values are in string format, so converting the datetime field to a Date object.
+
+```{r}
+# Convert date column to Date type
+
+world_cup_data$Datetime <- as.POSIXct(world_cup_data$Datetime, format = "%d %b %Y - %H:%M")
+head(world_cup_data)
+```
+
+
+> Extracting the year from the date and storing it in the Year column.
+
+```{r}
+# Extract year from date
+
+world_cup_data$Year <- as.integer(format(world_cup_data$Datetime, "%Y"))
+world_cup_data <- world_cup_data %>% filter(!is.na(Year))
+
+```
+
+
+***
+
+### Visualization 1 - Overall total match outcomes
+
+> Summarizing match results based on goal counts and storing them in a separate column.
+
+```{r}
+# Summarizing Data
+
+world_cup_data <- world_cup_data %>%
+  mutate(MatchResult = case_when(
+    Home.Team.Goals > Away.Team.Goals ~ "Home Win",
+    Home.Team.Goals < Away.Team.Goals ~ "Away Win",
+    TRUE ~ "Draw"
+  ))
+
+```
+
+> Each row represents a match result, so a new data set is created for the plot by counting the number of winning, losing, and drawn matches.
+
+```{r}
+# Creating new data set for the plot
+
+match_outcomes <- world_cup_data %>%
+  group_by(MatchResult) %>%
+  summarize(total_matches = n())
+```
+
+> Plotting a bar chart for the total number of matches versus the total number of match results in the data sets.
+
+```{r}
+
+# manual bar colors
+bar_colors <- c("#12436d","#28a197" ,"#801650")
+
+ggplot(match_outcomes, aes(x = MatchResult, y = total_matches, fill = bar_colors)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Overview of Match Results: Total Matches Played and Resulting Outcomes",
+       x = "Match Outcomes",
+       y = "Total Matches",
+       fill = "Match Result") +
+  scale_fill_identity() +
+  theme_minimal() 
+```
+
+***
+
+### Visualization 2 - Average Goals per Match Across World Cup Years
+
+> Each row represents a match, thus a new dataset is created for the plot by calculating the average goals per match per World Cup year.
+
+```{r}
+# Creating new data set for the plot
+
+average_goals_per_match_data <- world_cup_data %>%
+  group_by(Year) %>%
+  summarize(
+    total_matches = n(),
+    total_goals = sum(Home.Team.Goals + Away.Team.Goals, na.rm = TRUE),
+    average_goals = mean(Home.Team.Goals + Away.Team.Goals, na.rm = TRUE)
+  )
+```
+
+> plotting the line chart for the Average Goals per Match per World Cup Year
+
+```{r}
+
+ggplot(data = average_goals_per_match_data, aes(x = Year, y = average_goals, color = as.factor(Year))) +
+  geom_point(size = 3) +
+  geom_line(aes(group = 1), linewidth = 1.2) +
+  labs(title = "Average Goals per Match per World Cup Year", x = "World Cup Years", y = "Average Goals") +
+  scale_color_discrete(name = "World Cup Years") +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.box = "horizontal")
+  
+```
+***
+
+### Visualization 3 - Average Home Goals and Away Goals per Match Across World Cup Years
+
+> Summarizing data to create a plot for Average Home Goals and Away Goals per Match Across World Cup Years.
+
+```{r}
+
+average_home_away_goals_summary <- world_cup_data %>%
+  group_by(Year) %>%
+  summarize(
+    average_home_goals = mean(Home.Team.Goals, na.rm = TRUE),
+    average_away_goals = mean(Away.Team.Goals, na.rm = TRUE)
+  )
+
+```
+
+
+> Plotting the bar chart for the Average Goals vs. Home Goals per Match per World Cup Year.
+
+```{r}
+
+ggplot(data = average_home_away_goals_summary, aes(x = Year)) +
+  geom_bar(aes(y = average_home_goals, fill = "Home Team Goals"), stat = "identity", position = "dodge") +
+  geom_bar(aes(y = average_away_goals, fill = "Away Team Goals"), stat = "identity", position = "dodge") +
+  labs(title = "Scoring Trends: Home vs. Away Goals in World Cup History", y = "Average Goals" , x = "World Cup Match Years") +
+  scale_fill_manual(values = c("Home Team Goals" = "#ff7e0e", "Away Team Goals" = "#1f77b4"), name = "Goal Types") +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.text = element_text(size = 10), legend.title = element_text(size = 12)) +
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE))
+  
+```
