@@ -4,6 +4,7 @@
 .DS_Store
 .httr-oauth
 .Rproj.user
+.idea
 
 # History files
 .Rhistory
