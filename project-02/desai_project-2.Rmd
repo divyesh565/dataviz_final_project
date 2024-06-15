@@ -1,0 +1,97 @@
+---
+title: "Interactive Visualization of US Monthly Birth Data (2000-2014) along with predection scatter plot & Lakes in Florida - Spatial Visulization"
+author: "Divyesh Desai - `ddesai7656@floridapoly.edu`"
+output: html_notebook
+---
+***
+
+> Importing the required library.
+
+```{r}
+library(tidyverse)
+library(plotly)
+library(sf) # For spatial data
+library(ggplot2)
+```
+
+> Loading the data from the data directory and reading it through the imported library.
+
+
+```{r}
+birth_data_url <- "../data/us_births_00_14.csv"
+births <- read.csv(birth_data_url, stringsAsFactors = FALSE)
+```
+
+> filtering data to create plot
+
+```{r}
+monthly_births <- births %>%
+  group_by(year, month) %>%
+  summarize(total_births = sum(births), .groups = 'drop') %>%
+    mutate(date = as.Date(paste(year, month, "01", sep = "-")),
+         month_name = format(date, "%B"))
+```
+
+### Visualization 2 - Linear Model: Total Births Over Years
+
+
+> generating interactive plot from the filtered data
+
+```{r}
+plot <- plot_ly(monthly_births, x = ~year, y = ~total_births, type = 'scatter', mode = 'lines+markers', text = ~paste("Year:", year, "<br>Month:", month_name, "<br>Total Births:", total_births), 
+                hoverinfo = 'text') %>%
+  layout(
+    title = "Total Monthly Births in the US (2000-2014)",
+    xaxis = list(title = "Year"),
+    yaxis = list(title = "Total Births")
+  )
+plot
+```
+
+### Visualization 2 - Linear model: Predicting total births based on year
+
+
+> Linear model: Predicting total births based on year
+
+
+```{r}
+model <- lm(total_births ~ year, data = monthly_births)
+```
+
+
+> Summary of the model
+
+```{r}
+summary(model)
+```
+
+
+> Plot the model with ggplot2
+
+
+```{r}
+ggplot(monthly_births, aes(x = year, y = total_births)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "#532D8E") +
+  labs(title = "Linear Model: Total Births Over Years", x = "Year", y = "Total Births") +
+  theme_minimal()
+```
+
+
+### Visualization 3 - Lakes in Florida
+
+
+> Reading the shape file from the data directory
+
+```{r}
+lakes <- st_read("../data/Florida_Lakes/Florida_Lakes.shp")
+```
+
+> mapping lakes to the florida map using red color
+
+```{r}
+ggplot() +
+  geom_sf(data = lakes, fill = "red", color = "black") +
+  ggtitle("Lakes in Florida") +
+  theme_minimal()
+```
