@@ -19,7 +19,7 @@ library(ggplot2)
 ```{r}
 # Load and read the Wold Cup match data
 
-url <- "https://raw.githubusercontent.com/reisanar/datasets/master/WorldCupMatches.csv"
+url <- "../data/WorldCupMatches.csv"
 world_cup_data <- read.csv(url, stringsAsFactors = FALSE)
 ```
 
