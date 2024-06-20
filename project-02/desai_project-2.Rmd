@@ -12,9 +12,12 @@ library(tidyverse)
 library(plotly)
 library(sf) # For spatial data
 library(ggplot2)
+
 ```
 
 > Loading the data from the data directory and reading it through the imported library.
+
+### Visualization 1 - Linear Model: Total Births Over Seasons ( Revised - added seasons )
 
 
 ```{r}
@@ -30,25 +33,34 @@ monthly_births <- births %>%
   summarize(total_births = sum(births), .groups = 'drop') %>%
     mutate(date = as.Date(paste(year, month, "01", sep = "-")),
          month_name = format(date, "%B"))
+
+# Adding a season column to the data
+monthly_births <- monthly_births %>%
+  mutate(season = case_when(
+    month %in% 3:5 ~ "Spring",
+    month %in% 6:8 ~ "Summer",
+    month %in% 9:11 ~ "Fall",
+    TRUE ~ "Winter"
+  ))
+
 ```
 
-### Visualization 2 - Linear Model: Total Births Over Years
 
 
 > generating interactive plot from the filtered data
 
 ```{r}
-plot <- plot_ly(monthly_births, x = ~year, y = ~total_births, type = 'scatter', mode = 'lines+markers', text = ~paste("Year:", year, "<br>Month:", month_name, "<br>Total Births:", total_births), 
-                hoverinfo = 'text') %>%
+
+plot_season <- plot_ly(monthly_births, x = ~year, y = ~total_births, color = ~season, type = 'scatter', mode = 'lines+markers', text = ~paste("Year:", year, "<br>Season:", season, "<br>Total Births:", total_births), hoverinfo = 'text') %>%
   layout(
-    title = "Total Monthly Births in the US (2000-2014)",
+    title = "Total Monthly Births in the US (2000-2014) by Seasons",
     xaxis = list(title = "Year"),
     yaxis = list(title = "Total Births")
   )
-plot
+plot_season
 ```
 
-### Visualization 2 - Linear model: Predicting total births based on year
+### Visualization 2 - Linear model: Predicting total births based on year ( Revised )
 
 
 > Linear model: Predicting total births based on year
@@ -68,7 +80,6 @@ summary(model)
 
 > Plot the model with ggplot2
 
-
 ```{r}
 ggplot(monthly_births, aes(x = year, y = total_births)) +
   geom_point() +
@@ -76,7 +87,17 @@ ggplot(monthly_births, aes(x = year, y = total_births)) +
   labs(title = "Linear Model: Total Births Over Years", x = "Year", y = "Total Births") +
   theme_minimal()
 ```
+*** 
 
+
+#### Resonse of the feedback for this plot.
+
+_Predicting total births over the years is crucial for public health planning, educational infrastructure, and economic forecasting. It helps allocate resources efficiently, project school enrollments accurately, and prepare for future labor market demands._  
+
+_By confirming the predicted values through assumptions of linearity, independence, homoscedasticity, and normality, we ensure the predictions are reliable and actionable, providing valuable insights for strategic planning and decision-making._  
+
+
+***
 
 ### Visualization 3 - Lakes in Florida
 
