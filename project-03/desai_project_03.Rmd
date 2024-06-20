@@ -21,6 +21,10 @@ library(ggplot2)
 library(lubridate)
 library(viridis)
 library(ggridges)
+library(tidyverse)
+library(tidytext)
+library(topicmodels)
+library(tm)
 
 
 weather_data_url <- "../data/tpa_weather_2022.csv"
@@ -171,19 +175,14 @@ Make sure to include a copy of the dataset in the `data/` folder, and reference 
 ***
 ### I have choosen to create a plot for a frequency count of most used top 20 bigrams. 
 
-
 ```{r, echo = FALSE, out.width="80%", fig.align='center'}
-# Load necessary libraries
-library(tidyverse)
-library(tidytext)
-library(ggplot2)
-library(topicmodels)
-library(tm)
-
 # Read the data set
 raw_data_url <- "../data/BB_top100_2015.csv"
 data <- read_csv(raw_data_url, col_names = c("Rank", "Song", "Artist", "Year", "Lyrics", "Source"), show_col_types = FALSE)
+```
 
+
+```{r, echo = FALSE, out.width="80%", fig.align='center'}
 # Preprocess the text data
 bigrams <- data %>%
   unnest_tokens(bigram, Lyrics, token = "ngrams", n = 2) %>%
@@ -191,7 +190,10 @@ bigrams <- data %>%
   filter(!word1 %in% stop_words$word) %>%
   filter(!word2 %in% stop_words$word) %>%
   count(word1, word2, sort = TRUE)
+```
 
+
+```{r, echo = FALSE, out.width="80%", fig.align='center'}
 # Visualize the most frequent bigrams with enhanced aesthetics
 bigrams %>%
   slice_max(n, n = 20) %>%
@@ -215,7 +217,5 @@ bigrams %>%
     panel.grid.minor = element_blank()
   ) +
   scale_fill_gradient(low = "#C9DEF4", high = "#F5CCD4")
-
 ```
-
 

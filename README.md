@@ -1,8 +1,8 @@
 # Data Visualization and Reproducible Research
 
-> Firstname Lastname. 
+> Divyesh Desai - `ddesai7656@floridapoly.edu` 
 
-Learn more about me in my [GitHub profile page](https://github.com/reiminer). 
+Learn more about me in my [GitHub profile page](https://github.com/divyesh565). 
 
 
 The following is a sample of products created during the _"Data Visualization and Reproducible Research"_ course.
@@ -10,36 +10,42 @@ The following is a sample of products created during the _"Data Visualization an
 
 ## Project 01
 
-In the `project_01/` folder you can find... _[add short description of your revised project here]_
+In the `project_01/` folder, you will find three distinct visualizations based on World Cup Matches data. I analyzed this data and generated several visualizations. Below is my favorite, which provides a comprehensive overview of match results along with their total counts.
 
-**Sample data visualization:** 
+#### **Code** 
 
-_[include your favorite visualization from this project here]_
-<img src="https://github.com/reisanar/figs/raw/master/echarts.png" width="70%" height="70%">
+![](figures/project_1_sneak_peak_code.png)
 
+
+![](figures/project_1_sneak_peak.png)
+
+***
 
 ## Project 02
 
-In this project, I explored ... _[short description of your revised project goes here]_ Find the code and report in the `project_02/` folder.
+In the `project_02/` folder, you will discover three unique visualizations created from different data sets. Among these, my favorite is a chart that highlights the locations of lakes on a map of Florida.  
 
-**Sample data visualization:** 
+#### **Code** 
 
-_[include your favorite visualization from this project here]_
-<img src="https://raw.githubusercontent.com/reisanar/dataviz_final_project/main/figures/fl_higher_ed.png" width="80%" height="80%">
+![](figures/project_2_sneak_peak_code.png)
 
-(you can place your figures in the `figures/` folder and use the `![](path_to_picture)` option to add the pictures here)
+
+![](figures/project_2_sneak_peak.png)
 
 
 ## Project 03
 
-In this project, I explored ... _[short description of the data visualizations you for this part of the project produced goes here]_
+In this project `project_03/`, In addition to the various visualizations that were requested, I also delved into the Billboard Top 100 Lyrics data from 2015. I conducted a detailed text analysis on the lyrics and created a visualization chart showcasing the top 20 most frequently used words.  
 
-**Sample data visualization:** 
+#### **Code**
 
-_[include your favorite visualization from this project here]_
-<img src="https://github.com/reisanar/figs/raw/master/concrete_density.png" width="80%" height="80%">
+![](figures/project_3_sneak_peak_code.png)
+
+
+![](figures/project_3_sneak_peak.png)
+
 
 
 ### Moving Forward
 
-_Please add here a short reflection on what you learned and what you plan to continue exploring in terms of data visualization, data storytelling, reproducible research, and/or related topics._
+This course has been immensely valuable in expanding my understanding of data visualization. I've learned not only the technical aspects of creating effective visualizations but also the best practices that should be followed to ensure clarity and impact. One of the most significant insights I gained is the importance of aesthetic details in various types of visualizations. By thoughtfully applying color, design principles, and innovative techniques, I can create visualizations that are not only informative but also engaging and visually appealing. This comprehensive approach to data visualization will enable me to present data in a way that tells compelling stories and drives insightful decision-making in any professional context.
